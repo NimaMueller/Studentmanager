@@ -30,10 +30,21 @@ public class StudentService {
 
     public String createStudent(Student student) {
 
+        studentList.add(student);
+
         return "Student: " + student.getFirstName() + " " + student.getName() + " created successfully!";
     }
 
+    public Student updaStudent(Student student, int matriklNr) {
+        studentList.remove(getStudentById(matriklNr));
+        studentList.add(student);
+
+        return student; 
+    }
+
     public String deleteStudent(int matriklNr) {
+
+        studentList.remove(getStudentById(matriklNr));
 
         return "Student " + " deleted successfully!";
     }

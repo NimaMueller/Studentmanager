@@ -1,5 +1,6 @@
 package com.studentmanager.studentmanager.student;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,24 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/student")
 public class StudentController {
 
-    StudentService studentService;
+    StudentService studentService = new StudentService();
 
-    @GetMapping("{id}")
+    @GetMapping("{matriklNr}")
     public Student getStudent(@PathVariable int matriklNr) {
         return studentService.getStudentById(matriklNr);
     }
 
-    @PostMapping("postStudent")
+    @PostMapping("post")
     public String createStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
     }
 
-    @PutMapping("putStudent/{id}")
-    public Student putMethodName(@PathVariable int matriklNr, @RequestBody Student student) {
+    @PutMapping("put/{matriklNr}")
+    public Student updateStudent(@PathVariable int matriklNr, @RequestBody Student student) {
+        studentService.updaStudent(student, matriklNr);
         return student;
     }
 
-    @GetMapping("delete/{id}")
+    @DeleteMapping("delete/{matriklNr}")
     public String deleteStudent(@PathVariable int matriklNr) {
         return studentService.deleteStudent(matriklNr);
     }
