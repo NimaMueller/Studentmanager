@@ -1,11 +1,7 @@
 package com.studentmanager.studentmanager.student;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentService {
 
-    public static final String URL = "spring.datasource.url=jdbc:postgresql://localhost:5438";
-    public static final String USERNAME = "postgres";
-    public static final String PASSWORD = "postgres";
-
     @Autowired
-    ArrayList<Student> studentList;
+    StudentRepository studentRepository;
 
+    ArrayList<Student> studentList = new ArrayList<>();
+
+/* 
     public Student getStudentById(int matriklNr) {
         studentList.add(new Student(1394618, "Mueller", "Nima", LocalDate.of(2003, 01, 17)));
         try {
@@ -34,33 +29,25 @@ public class StudentService {
         }
         return null;
 
+    } */
+
+    public Student getStudent(int matriklNr){
+        return studentRepository.findByMatriklNr(matriklNr);
     }
 
     public String createStudent(Student student) {
 
-        String sql = "INSERT INTO students (matriklNr, name, firstname, dob)";
-
-        try (
-            Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-        ) {
-            // Setzen Sie die Parameter basierend auf den Eigenschaften Ihres Objekts
-            pstmt.setString(1, student.getProperty1());
-            pstmt.setString(2, student.getProperty2());
-
-            // Führen Sie die SQL-Insert-Anweisung aus
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        studentList.add(student);
+        studentRepository.save(student);
 
         return "Student: " + student.getFirstName() + " " + student.getName() + " created successfully!";
     }
 
-    public Student updaStudent(Student student, int matriklNr) {
-        studentList.remove(getStudentById(matriklNr));
+    public List<Student> getAllStudents(){
+        return studentRepository.findAll();
+    }
+
+/*     public Student updateStudent(Student student, int matriklNr) {
+        studentList.remove(studentRepository.findByMatriklNr(matriklNr));
         studentList.add(student);
 
         return student;
@@ -68,9 +55,9 @@ public class StudentService {
 
     public String deleteStudent(int matriklNr) {
 
-        studentList.remove(getStudentById(matriklNr));
+        studentList.remove(studentRepository.findByMatriklNr(matriklNr));
 
         return "Student " + " deleted successfully!";
-    }
+    } */
 
 }
