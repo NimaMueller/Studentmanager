@@ -1,8 +1,8 @@
 -- Creation of table
 CREATE TABLE IF NOT EXISTS students (
-  matriklNr INT,
+  matrikl_nr INT NOT NULL,
   name varchar(250) NOT NULL,
-  firstName varchar(250) NOT NULL,
-  dob DATE
-  PRIMARY KEY (matriklNr)
+  first_name varchar(250) NOT NULL,
+  dob DATE,
+  PRIMARY KEY (matrikl_nr)
 );
