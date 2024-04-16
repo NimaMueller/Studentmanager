@@ -1,6 +1,5 @@
 package com.studentmanager.studentmanager.student;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +11,16 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
-    ArrayList<Student> studentList = new ArrayList<>();
-
     public String createStudent(Student student) {
 
         try {
             studentRepository.save(student);
             studentRepository.flush();
-            return "Student: " + student.getFirstName() + " " + student.getName() + " created successfully!";
+            return "Student created successfully: " + student.toString();
         } catch (Exception e) {
-            System.out.println(
-                    "An error occurred while creating a new student with matriklNr: " + e.getMessage());
+            return "An error occurred while creating a new student with matriklNr: " + student.getMatriklNr() + " "
+                    + e.getMessage();
         }
-        return null;
     }
 
     public Student getStudent(int matriklNr) {
@@ -35,11 +31,42 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Student updateStudent(Student student) {
-        studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(), student.getName());
-        studentRepository.flush();
-        /* studentRepository.save(student); */
-        return student;
+    public String updateStudent(Student student) {
+
+        try {
+
+            Student s = studentRepository.findByMatriklNr(student.getMatriklNr());
+
+            if (student.getName() != null) {
+
+                s.setName(student.getName());
+
+            }
+
+            if (student.getFirstName() != null) {
+
+                s.setFirstName(student.getFirstName());
+
+            }
+
+            if (student.getDob() != null) {
+
+                s.setDob(student.getDob());
+            }
+
+            // studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(),
+            // student.getName());
+
+            studentRepository.save(s);
+            studentRepository.flush();
+
+            return "Student updated successfully: " + s.toString();
+
+        } catch (Exception e) {
+            return "An error occurred while updating student with matriklNr: " + student.getMatriklNr() + " "
+                    + e.getMessage();
+        }
+
     }
 
     public String deleteStudent(int matriklNr) {

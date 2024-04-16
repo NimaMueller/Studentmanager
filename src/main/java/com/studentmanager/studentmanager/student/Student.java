@@ -2,6 +2,7 @@ package com.studentmanager.studentmanager.student;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -21,16 +22,17 @@ import lombok.ToString;
 public class Student {
 
   @Id
-  // @Column(name="matriklnr")
+  // @ManyToMany(path = "moduleId")
+  @Column(name = "matrikl_nr")
   private int matriklNr;
 
-  // @Column(name="name")
+  @Column(name = "name")
   private String name;
 
-  // @Column(name="firstname")
+  @Column(name = "first_name")
   private String firstName;
 
-  // @Column(name="dob")
+  @Column(name = "dob")
   private LocalDate dob;
 
 }
