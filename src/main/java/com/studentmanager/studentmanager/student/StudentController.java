@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,6 +48,18 @@ public class StudentController {
   @DeleteMapping("delete/{matriklNr}")
   public String deleteStudent(@PathVariable int matriklNr) {
     return studentService.deleteStudent(matriklNr);
+  }
+
+  @PostMapping("enroll")
+  public String enrollCourse(@RequestParam int courseId) {
+
+    return "entity";
+  }
+
+  @PostMapping("signUp")
+  public String signUp(@RequestParam int moduleId) {
+
+    return studentService.signUpForModule(moduleId);
   }
 
 }

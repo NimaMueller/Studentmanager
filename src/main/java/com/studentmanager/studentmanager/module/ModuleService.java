@@ -32,12 +32,12 @@ public class ModuleService {
         return moduleRepository.findAll();
     }
 
-    public Module updateModule(Module module) {
-        moduleRepository.updateModulebyModuleId(module.getModuleId(), module.getDescription());
+ /*    public Module updateModule(Module module) {
+        moduleRepository.updateModulebyModuleById(module.getModuleId(), module.getDescription());
         moduleRepository.flush();
         return module;
     }
-
+ */
     public String deleteModule(int moduleId) {
 
         moduleRepository.delete(moduleRepository.findByModuleId(moduleId));

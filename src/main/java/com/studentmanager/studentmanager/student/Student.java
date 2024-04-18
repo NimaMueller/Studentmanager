@@ -1,10 +1,14 @@
 package com.studentmanager.studentmanager.student;
 
 import java.time.LocalDate;
+import java.util.Set;
+
+import com.studentmanager.studentmanager.signUpForModule.SignUpFoModule;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +26,6 @@ import lombok.ToString;
 public class Student {
 
   @Id
-  // @ManyToMany(path = "moduleId")
   @Column(name = "matrikl_nr")
   private int matriklNr;
 
@@ -35,4 +38,6 @@ public class Student {
   @Column(name = "dob")
   private LocalDate dob;
 
+ /*  @OneToMany(mappedBy = "student")
+  Set<SignUpFoModule> signUp; */
 }

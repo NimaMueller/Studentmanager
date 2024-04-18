@@ -37,12 +37,11 @@ public class ModuleController {
     return moduleService.getAllModules();
   }
 
-  // Update a Module in the DB.
-
+/*   // Update a Module in the DB.
   @PutMapping("put")
   public Module updateStudent(@RequestBody Module module) {
     return moduleService.updateModule(module);
-  }
+  } */
 
   // Delete a Module from the DB.
   @DeleteMapping("delete/{moduleId}")

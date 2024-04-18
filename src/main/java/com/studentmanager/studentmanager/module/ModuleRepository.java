@@ -13,8 +13,8 @@ public interface ModuleRepository extends JpaRepository<Module, Integer> {
 
     Module findByModuleId(long moduleId);
 
-    @Modifying
+ /*    @Modifying
     @Transactional
     @Query("UPDATE Module m SET m.description = :description WHERE m.moduleId = :moduleId")
-    void updateModulebyModuleId(@Param("moduleId") Integer moduleId, @Param("description") String description);
+    void updateModulebyModuleById(@Param("moduleId") Integer moduleId, @Param("description") String description); */
 }

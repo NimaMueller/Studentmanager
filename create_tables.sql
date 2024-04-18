@@ -13,3 +13,14 @@ CREATE TABLE IF NOT EXISTS modules (
   c_p INT NOT NULL,
   PRIMARY KEY (module_id)
 );
+
+CREATE TABLE if NOT EXISTS signUp (
+  student_matrikl_nr INT NOT NULL,
+  module_id INT NOT NULL,
+  grade DOUBLE PRECISION,
+  passed BOOLEAN,
+  attempt INT NOT NULL,
+  PRIMARY KEY (student_matrikl_nr, module_id),
+  FOREIGN KEY (student_matrikl_nr) REFERENCES students(matrikl_nr),
+  FOREIGN KEY (module_id) REFERENCES modules(module_id)
+);
