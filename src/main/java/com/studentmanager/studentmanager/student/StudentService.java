@@ -14,6 +14,9 @@ public class StudentService {
     StudentRepository studentRepository;
     ModuleRepository moduleRepository;
 
+ 
+
+
     public String createStudent(Student student) {
 
         try {
@@ -89,5 +92,16 @@ public class StudentService {
                     + e.getMessage();
         }
     }
+
+
+
+
+
+    public int calculator(int x, int y) {
+
+        return x + y;
+    }
+
+  
 
 }
