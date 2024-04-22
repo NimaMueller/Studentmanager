@@ -1,5 +1,6 @@
 package com.studentmanager.studentmanager.course;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -19,12 +20,17 @@ import lombok.ToString;
 public class Course {
 
     @Id
-    private long courseId;
+    @Column(name = "course_id")
+    private int courseId;
+    
+    @Column(name = "description")
     private String description;
-    private degree degree;
+
+    @Column(name= "degree")
+    private String degree;
   //  private List<Module> moduleList;
 }
 
-enum degree {
+/* enum degree {
     BachelorOfSciences, MasterOfSciences
-}
+} */

@@ -60,6 +60,11 @@ public class StudentService {
                 s.setDob(student.getDob());
             }
 
+            if (student.getStudentCourseId() != null) {
+
+                s.setStudentCourseId(student.getStudentCourseId());
+            }
+
             // studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(),
             // student.getName());
 

@@ -33,8 +33,8 @@ public class StudentServiceTest {
 
     @Test
     public void testUpdateStudent() {
-        when(studentRepository.findByMatriklNr(1)).thenReturn(new Student(1111, "test", null, null));
-        Student studentToUpdate = new Student(1, "Mueller", null, null);
+        when(studentRepository.findByMatriklNr(1)).thenReturn(new Student(1111,1, "test", null, null));
+        Student studentToUpdate = new Student(1,12, "Mueller", null, null);
 
         
         
