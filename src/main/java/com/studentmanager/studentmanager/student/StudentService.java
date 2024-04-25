@@ -5,14 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.studentmanager.studentmanager.module.ModuleRepository;
-
 @Service
 public class StudentService {
 
     @Autowired
     StudentRepository studentRepository;
-    ModuleRepository moduleRepository;
 
  
 
@@ -37,7 +34,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public String updateStudent(Student student) {
+    /* public String updateStudent(Student student) {
 
         try {
 
@@ -78,7 +75,7 @@ public class StudentService {
                     + e.getMessage();
         }
 
-    }
+    } */
 
     public String deleteStudent(int matriklNr) {
 
@@ -88,7 +85,7 @@ public class StudentService {
     }
 
     // Student belegt ein modul seines Studiengangs
-    public String signUpForModule(int modulId) {
+/*     public String signUpForModule(int modulId) {
         try {
             moduleRepository.findByModuleId(modulId);
             return "Successfully signed up for: ";
@@ -96,7 +93,7 @@ public class StudentService {
             return "An error occurred while trying to sign up for Module with ID: " + " "
                     + e.getMessage();
         }
-    }
+    } */
 
 
 
