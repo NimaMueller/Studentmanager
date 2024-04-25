@@ -28,6 +28,7 @@ public class Course {
 
     @Column(name= "degree")
     private String degree;
+    
   //  private List<Module> moduleList;
 }
 
