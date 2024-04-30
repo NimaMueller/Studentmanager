@@ -40,8 +40,8 @@ public class Student {
    * @ManyToOne
    * 
    * @JoinColumn(name = "course_id")
-   * private Course course
-   */;
+   * private Course course;
+   */
 
   /*
    * @ManyToOne
