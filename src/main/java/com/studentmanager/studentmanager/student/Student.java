@@ -25,8 +25,8 @@ public class Student {
   @Column(name = "matrikl_nr")
   private int matriklNr;
 
-  @Column(name = "student_course_id")
-  private Integer studentCourseId;
+@Column(name = "student_course_id")
+  private Integer studentCourseId; 
 
   @Column(name = "name")
   private String name;
