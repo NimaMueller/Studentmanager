@@ -16,7 +16,9 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
+
     HttpClient client = HttpClient.newBuilder().build();
+
 
     public String createStudent(Student student) {
 
@@ -53,6 +55,9 @@ public class StudentService {
     public String updateStudent(Student student) {
 
         try {
+
+            // studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(),
+            // student.getName());
 
             Student s = studentRepository.findByMatriklNr(student.getMatriklNr());
 

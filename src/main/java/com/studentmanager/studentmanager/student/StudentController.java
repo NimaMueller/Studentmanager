@@ -55,8 +55,8 @@ public class StudentController {
 
     return "entity";
   }
-/* 
-  @PostMapping("signUp")
+
+  /* @PostMapping("signUp")
   public String signUp(@RequestParam int moduleId) {
 
     return studentService.signUpForModule(moduleId);
