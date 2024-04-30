@@ -1,5 +1,10 @@
 package com.studentmanager.studentmanager.student;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +16,27 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
+
+    HttpClient client = HttpClient.newBuilder().build();
+
+
     public String createStudent(Student student) {
 
         try {
-            studentRepository.save(student);
-            studentRepository.flush();
+
+            int courseId = student.getStudentCourseId();
+            StringBuilder builder = new StringBuilder();
+            String uri = "http://localhost:8081/api/v1/course/get/";
+            builder.append(uri).append(courseId);
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            if(response.body().isEmpty() || response.body().isBlank()) {
+                throw new NullPointerException("Course not available");
+            } else {
+                studentRepository.save(student);
+                studentRepository.flush();
+            }
             return "Student created successfully: " + student.toString();
         } catch (Exception e) {
             return "An error occurred while creating a new student with matriklNr: " + student.getMatriklNr() + " "
