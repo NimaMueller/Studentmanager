@@ -25,8 +25,8 @@ public class Student {
   @Column(name = "matrikl_nr")
   private int matriklNr;
 
-/*   @Column(name = "student_course_id")
-  private Integer studentCourseId; */
+  @Column(name = "student_course_id")
+  private Integer studentCourseId;
 
   @Column(name = "name")
   private String name;
@@ -36,14 +36,19 @@ public class Student {
 
   @Column(name = "dob")
   private LocalDate dob;
-/* 
-@ManyToOne
-@JoinColumn(name = "course_id")
-  private Course course */;
+  /*
+   * @ManyToOne
+   * 
+   * @JoinColumn(name = "course_id")
+   * private Course course
+   */;
 
- /*  @ManyToOne
-  @JoinColumn(name = "student_course_id", insertable = false, updatable = false)
-  private Course course; */
-
+  /*
+   * @ManyToOne
+   * 
+   * @JoinColumn(name = "student_course_id", insertable = false, updatable =
+   * false)
+   * private Course course;
+   */
 
 }

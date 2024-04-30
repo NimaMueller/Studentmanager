@@ -39,10 +39,10 @@ public class StudentController {
   }
 
   // Update a Stundent in the DB.
-/*   @PutMapping("put")
+  @PutMapping("put")
   public String updateStudent(@RequestBody Student student) {
     return studentService.updateStudent(student);
-  } */
+  }
 
   // Delete a Stundent from the DB.
   @DeleteMapping("delete/{matriklNr}")
@@ -55,8 +55,8 @@ public class StudentController {
 
     return "entity";
   }
-/* 
-  @PostMapping("signUp")
+
+  /* @PostMapping("signUp")
   public String signUp(@RequestParam int moduleId) {
 
     return studentService.signUpForModule(moduleId);

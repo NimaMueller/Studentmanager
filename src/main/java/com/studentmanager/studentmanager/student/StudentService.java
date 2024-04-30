@@ -11,9 +11,6 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
- 
-
-
     public String createStudent(Student student) {
 
         try {
@@ -34,9 +31,12 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    /* public String updateStudent(Student student) {
+    public String updateStudent(Student student) {
 
         try {
+
+            // studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(),
+            // student.getName());
 
             Student s = studentRepository.findByMatriklNr(student.getMatriklNr());
 
@@ -62,9 +62,6 @@ public class StudentService {
                 s.setStudentCourseId(student.getStudentCourseId());
             }
 
-            // studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(),
-            // student.getName());
-
             studentRepository.save(s);
             studentRepository.flush();
 
@@ -75,7 +72,7 @@ public class StudentService {
                     + e.getMessage();
         }
 
-    } */
+    }
 
     public String deleteStudent(int matriklNr) {
 
@@ -85,25 +82,21 @@ public class StudentService {
     }
 
     // Student belegt ein modul seines Studiengangs
-/*     public String signUpForModule(int modulId) {
-        try {
-            moduleRepository.findByModuleId(modulId);
-            return "Successfully signed up for: ";
-        } catch (Exception e) {
-            return "An error occurred while trying to sign up for Module with ID: " + " "
-                    + e.getMessage();
-        }
-    } */
-
-
-
-
+    /*
+     * public String signUpForModule(int modulId) {
+     * try {
+     * moduleRepository.findByModuleId(modulId);
+     * return "Successfully signed up for: ";
+     * } catch (Exception e) {
+     * return "An error occurred while trying to sign up for Module with ID: " + " "
+     * + e.getMessage();
+     * }
+     * }
+     */
 
     public int calculator(int x, int y) {
 
         return x + y;
     }
-
-  
 
 }
