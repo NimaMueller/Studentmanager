@@ -51,15 +51,15 @@ public class StudentController {
   }
 
   @PostMapping("enroll")
-  public String enrollCourse(@RequestParam int courseId) {
+  public String enrollInCourse(@RequestParam int matriklNr, Integer courseId) {
 
-    return "entity";
+    return studentService.enroll(matriklNr, courseId);
   }
 
-  /* @PostMapping("signUp")
-  public String signUp(@RequestParam int moduleId) {
+  @PostMapping("signUp")
+  public String signUp(@RequestParam int matriklNr, Integer moduleId) {
 
-    return studentService.signUpForModule(moduleId);
-  } */
+    return studentService.signUpForModule(matriklNr, moduleId);
+  }
 
 }
