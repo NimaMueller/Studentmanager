@@ -102,6 +102,10 @@ public class StudentService {
         return "Student with matriklNr: " + matriklNr + " deleted successfully!";
     }
 
+    
+
+    
+
     // Student belegt ein modul seines Studiengangs
     /*
      * public String signUpForModule(int modulId) {
