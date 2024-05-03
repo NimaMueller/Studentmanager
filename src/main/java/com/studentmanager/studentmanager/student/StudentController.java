@@ -62,4 +62,16 @@ public class StudentController {
     return studentService.signUpForModule(matriklNr, moduleId);
   }
 
+  @PostMapping("passed")
+  public String passed(@RequestParam int matriklNr, Integer moduleId) {
+
+    return studentService.passedModule(matriklNr, moduleId);
+  }
+
+  @PostMapping("failed")
+  public String failed(@RequestParam int matriklNr, Integer moduleId) {
+
+    return studentService.failedModule(matriklNr, moduleId);
+  }
+
 }

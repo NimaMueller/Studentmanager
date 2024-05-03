@@ -31,12 +31,11 @@ public class Student {
   @Nullable
   @Column(name = "student_course_id")
   private Integer studentCourseId;
-  /*
-   * @Nullable
-   * 
-   * @Column(name = "module_course_id")
-   * private Integer studentModuleId;
-   */
+  
+  @Nullable
+  @Column(name = "module_course_id")
+  private Integer studentModuleId;
+  
 
   @Column(name = "name")
   private String name;
@@ -66,12 +65,39 @@ public class Student {
     this.dob = dob;
   }
 
-  public String addAktiveModule(Integer moduleId) {
+public String addAktiveModule(Integer moduleId) {
     if (!aktiveModules.contains(moduleId)) {
       aktiveModules.add(moduleId);
       return "Student signed up successfully in module: " + moduleId;
     } else {
-      return "allready signed up for module: " + moduleId;
+      return "already signed up for module: " + moduleId;
+    }
+  }
+
+
+  public String addPassedModule(Integer moduleId) {
+
+    if (aktiveModules.contains(moduleId) && !failedModules.contains(moduleId)) {
+
+      aktiveModules.remove(moduleId);
+      passedModules.add(moduleId);
+      return "Student passed Module " + moduleId; 
+    }
+    else {
+      return "Student is not signed up for " + moduleId;
+    }
+  }
+
+  public String addFailedModule(Integer moduleId) {
+
+    if (aktiveModules.contains(moduleId) && !passedModules.contains(moduleId)) {
+
+      aktiveModules.remove(moduleId);
+      failedModules.add(moduleId);
+      return "Student failed Module " + moduleId; 
+    }
+    else {
+      return "Student already failed  " + moduleId;
     }
   }
 
@@ -107,7 +133,7 @@ public class Student {
    * 
    * @JoinColumn(name = "course_id")
    * private Course course
-   */;
+   */
 
   /*
    * @ManyToOne

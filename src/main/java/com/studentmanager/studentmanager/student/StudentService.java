@@ -85,6 +85,61 @@ public class StudentService {
         }
     }
 
+    public String passedModule(int matriklNr, Integer modulId) {
+        try {
+
+            StringBuilder builder = new StringBuilder();
+            String uri = "http://localhost:8080/api/v1/module/get/";
+            builder.append(uri).append(modulId);
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            if (response.body().isEmpty() || response.body().isBlank()) {
+                throw new NullPointerException("Module not available");
+            } else {
+                String statusMessage = studentRepository.findByMatriklNr(matriklNr).addPassedModule(modulId);
+                studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
+                studentRepository.flush();
+                return statusMessage;
+
+            }
+
+        } catch (Exception e) {
+            return "An error occurred while trying to sign up for Module with ID: " + " "
+                    + e.getMessage();
+        }
+    }
+
+    public String failedModule(int matriklNr, Integer modulId) {
+        try {
+
+            StringBuilder builder = new StringBuilder();
+            String uri = "http://localhost:8080/api/v1/module/get/";
+            builder.append(uri).append(modulId);
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            if (response.body().isEmpty() || response.body().isBlank()) {
+                throw new NullPointerException("Module not available");
+            } else {
+                String statusMessage = studentRepository.findByMatriklNr(matriklNr).addFailedModule(modulId);
+                studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
+                studentRepository.flush();
+                return statusMessage;
+
+            }
+
+        } catch (Exception e) {
+            return "An error occurred while trying to sign up for Module with ID: " + " "
+                    + e.getMessage();
+        }
+    }
+
+
+
+
+
+
     public Student getStudent(int matriklNr) {
         return studentRepository.findByMatriklNr(matriklNr);
     }
