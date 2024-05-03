@@ -31,12 +31,6 @@ public class Student {
   @Nullable
   @Column(name = "student_course_id")
   private Integer studentCourseId;
-  /*
-   * @Nullable
-   * 
-   * @Column(name = "module_course_id")
-   * private Integer studentModuleId;
-   */
 
   @Column(name = "name")
   private String name;
@@ -67,12 +61,59 @@ public class Student {
   }
 
   public String addAktiveModule(Integer moduleId) {
-    if (!aktiveModules.contains(moduleId)) {
-      aktiveModules.add(moduleId);
-      return "Student signed up successfully in module: " + moduleId;
+    if (!passedModules.contains(moduleId)) {
+      if (!aktiveModules.contains(moduleId)) {
+        aktiveModules.add(moduleId);
+        return "Student signed up successfully in module with Id: " + moduleId;
+      } else {
+        return "Student already signed up for module with Id: " + moduleId;
+      }
     } else {
-      return "allready signed up for module: " + moduleId;
+      return "Student cannot sign up for module with Id: " + moduleId + " because he already passed it.";
     }
+
+  }
+
+  public String passedModule(Integer moduleId) {
+    if (aktiveModules.contains(moduleId) && !passedModules.contains(moduleId)) {
+
+      aktiveModules.remove(moduleId);
+      passedModules.add(moduleId);
+      return "Student passed module with Id: " + moduleId;
+
+    } else if (passedModules.contains(moduleId)) {
+      return "Student already passed module with Id: " + moduleId;
+
+    } else {
+      return "Student cannot pass module with Id: " + moduleId + " because he didn't signed up for it.";
+
+    }
+
+  }
+
+  public String failedModule(Integer moduleId) {
+    int trys = 1;
+    if (aktiveModules.contains(moduleId)) {
+      for (int i : failedModules) {
+        if (i == moduleId) {
+          trys++;
+
+          if (trys >= 3) {
+            aktiveModules.remove(moduleId);
+            failedModules.add(moduleId);
+            return "Student failed module with Id: " + moduleId + " for the third time and will now be exmatriculated";
+          }
+        }
+      }
+      aktiveModules.remove(moduleId);
+      failedModules.add(moduleId);
+      return "Student failed Module with Id: " + moduleId + " for the " + trys + ". time";
+    } else if (passedModules.contains(moduleId)) {
+      return "Student cannot fail module with Id: " + moduleId + " because he already passed it.";
+    } else {
+      return "Student cannot fail module with Id: " + moduleId + " because he didn't signed up for it.";
+    }
+
   }
 
   /*

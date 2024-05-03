@@ -5,6 +5,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,12 +60,12 @@ public class StudentService {
         }
     }
 
-    // Student belegt ein Modul seines Studiengangs.
+    // Student signed up for a Module.
     public String signUpForModule(int matriklNr, Integer modulId) {
         try {
 
             StringBuilder builder = new StringBuilder();
-            String uri = "http://localhost:8080/api/v1/module/get/";
+            String uri = "http://localhost:8080/api/v1/module/";
             builder.append(uri).append(modulId);
             HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
                     .GET().build();
@@ -81,6 +82,84 @@ public class StudentService {
 
         } catch (Exception e) {
             return "An error occurred while trying to sign up for Module with ID: " + " "
+                    + e.getMessage();
+        }
+    }
+
+    // Student passed a Module.
+    public String passedModule(int matriklNr, Integer modulId) {
+        try {
+
+            StringBuilder builder = new StringBuilder();
+            String uri = "http://localhost:8080/api/v1/module/";
+            builder.append(uri).append(modulId);
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            if (response.body().isEmpty() || response.body().isBlank()) {
+                throw new NullPointerException("Module not available");
+            } else {
+                String statusMessage = studentRepository.findByMatriklNr(matriklNr).passedModule(modulId);
+                studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
+                studentRepository.flush();
+                return statusMessage;
+
+            }
+
+        } catch (Exception e) {
+            return "An error occurred while trying to sign up for Module with ID: " + " "
+                    + e.getMessage();
+        }
+    }
+
+    // Student failed a Module.
+    public String failedModule(int matriklNr, Integer modulId) {
+        try {
+
+            StringBuilder builder = new StringBuilder();
+            String uri = "http://localhost:8080/api/v1/module/";
+            builder.append(uri).append(modulId);
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            if (response.body().isEmpty() || response.body().isBlank()) {
+                throw new NullPointerException("Module not available");
+            } else {
+                String statusMessage = studentRepository.findByMatriklNr(matriklNr).failedModule(modulId);
+                studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
+                studentRepository.flush();
+                return statusMessage;
+
+            }
+
+        } catch (Exception e) {
+            return "An error occurred while trying to sign up for Module with ID: " + " "
+                    + e.getMessage();
+        }
+    }
+
+    public List<Integer> tempModuleList; 
+
+    // Get the Module list for the specific course
+    public String getModuleList(int matriklNr, int courseId) {
+        try {
+            tempModuleList = new ArrayList<>();
+            StringBuilder builder = new StringBuilder();
+            String uri = "http://localhost:8081/api/v1/course/getModuleList/";
+            builder.append(uri).append(courseId);
+            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            if (response.body().isEmpty() || response.body().isBlank()) {
+                throw new NullPointerException("Course not available");
+            } else {
+                studentRepository.findByMatriklNr(matriklNr).setStudentCourseId(courseId);
+                studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
+                studentRepository.flush();
+                return "Student enrolled successfully in course: " + courseId;
+            }
+        } catch (Exception e) {
+            return "An error occurred while enrolling in course with id: " + matriklNr + " "
                     + e.getMessage();
         }
     }
