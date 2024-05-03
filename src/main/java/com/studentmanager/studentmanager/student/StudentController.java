@@ -50,16 +50,19 @@ public class StudentController {
     return studentService.deleteStudent(matriklNr);
   }
 
+  // Asign a existing Course to a Stunden.
   @PostMapping("enroll")
   public String enrollCourse(@RequestParam int courseId) {
 
     return "entity";
   }
 
-  /* @PostMapping("signUp")
-  public String signUp(@RequestParam int moduleId) {
-
-    return studentService.signUpForModule(moduleId);
-  } */
+  /*  // Let Student signup for Modelus in his course (if permitted).
+   * @PostMapping("signUp")
+   * public String signUp(@RequestParam int moduleId) {
+   * 
+   * return studentService.signUpForModule(moduleId);
+   * }
+   */
 
 }
