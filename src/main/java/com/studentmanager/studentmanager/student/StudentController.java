@@ -27,9 +27,9 @@ public class StudentController {
   }
 
   // Get a Stundent in the DB by his Matrikle number.
-  @GetMapping("{matriklNr}")
-  public Student getStudent(@PathVariable int matriklNr) {
-    return studentService.getStudent(matriklNr);
+  @GetMapping("{matrNr}")
+  public Student getStudent(@PathVariable int matrNr) {
+    return studentService.getStudent(matrNr);
   }
 
   // Get every Stundent in the DB.
@@ -45,33 +45,33 @@ public class StudentController {
   }
 
   // Delete a Stundent from the DB.
-  @DeleteMapping("delete/{matriklNr}")
-  public String deleteStudent(@PathVariable int matriklNr) {
-    return studentService.deleteStudent(matriklNr);
+  @DeleteMapping("delete/{matrNr}")
+  public String deleteStudent(@PathVariable int matrNr) {
+    return studentService.deleteStudent(matrNr);
   }
 
+  // Enroll a Student in a Course.
   @PostMapping("enroll")
-  public String enrollInCourse(@RequestParam int matriklNr, Integer courseId) {
-
-    return studentService.enroll(matriklNr, courseId);
+  public String enrollInCourse(@RequestParam int matrNr, Integer courseId) {
+    return studentService.enroll(matrNr, courseId);
   }
 
+  // Let the Student sign up for a Module of his Course.
   @PostMapping("signUp")
-  public String signUp(@RequestParam int matriklNr, Integer moduleId) {
-
-    return studentService.signUpForModule(matriklNr, moduleId);
+  public String signUp(@RequestParam int matrNr, Integer moduleId) {
+    return studentService.signUpForModule(matrNr, moduleId);
   }
 
+  // Let the Student pass a Module.
   @PostMapping("passed")
-  public String passed(@RequestParam int matriklNr, Integer moduleId) {
-
-    return studentService.passedModule(matriklNr, moduleId);
+  public String passed(@RequestParam int matrNr, Integer moduleId) {
+    return studentService.passedModule(matrNr, moduleId);
   }
 
+  // Let the Student fail a Module.
   @PostMapping("failed")
-  public String failed(@RequestParam int matriklNr, Integer moduleId) {
-
-    return studentService.failedModule(matriklNr, moduleId);
+  public String failed(@RequestParam int matrNr, Integer moduleId) {
+    return studentService.failedModule(matrNr, moduleId);
   }
 
 }
