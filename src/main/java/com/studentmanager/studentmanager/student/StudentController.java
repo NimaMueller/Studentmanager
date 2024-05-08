@@ -1,5 +1,6 @@
 package com.studentmanager.studentmanager.student;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,12 @@ public class StudentController {
     return studentService.signUpForModule(matriklNr, moduleId);
   }
 
+  @DeleteMapping("signOut")
+  public String signOut(@RequestParam int matriklNr, Integer moduleId) {
+
+    return studentService.signOutForModule(matriklNr, moduleId);
+  }
+
   @PostMapping("passed")
   public String passed(@RequestParam int matriklNr, Integer moduleId) {
 
@@ -73,5 +80,18 @@ public class StudentController {
 
     return studentService.failedModule(matriklNr, moduleId);
   }
+
+  @GetMapping("getPassedList/{matriklNr}")
+  public List<Integer> getPassedList(@PathVariable Integer matriklNr) {
+    return studentService.getPassedModulesByMatriklNr(matriklNr);
+     
+  }
+
+  @GetMapping("eligibileBachelor/{matriklNr}")
+  public boolean eligilbleBachelor(@PathVariable Integer matriklNr) throws IOException, InterruptedException {
+    return studentService.IsEligibleForBachelor(matriklNr);
+     
+  }
+  
 
 }
