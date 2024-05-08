@@ -73,29 +73,25 @@ public class StudentService {
         }
     }
 
-    public boolean IsEligibleForBachelor(int matriklNr) throws IOException, InterruptedException {
+/*     public boolean IsEligibleForBachelor(int matriklNr) throws IOException, InterruptedException {
 
- 
-        String uri =  "http://localhost:8080/api/v1/module/calculateCp";
+        String uri = "http://localhost:8080/api/v1/module/calculateCp";
 
-        Gson gson = new Gson(); 
-        String jsonBody = gson.toJson(Arrays.asList(1,2,3));
-        HttpRequest request = HttpRequest.newBuilder()                
-        .uri(URI.create(uri)).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
+        Gson gson = new Gson();
+        String jsonBody = gson.toJson(Arrays.asList(1, 2, 3));
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri)).header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
 
         HttpResponse<String> bachelorResponse = client.send(request, BodyHandlers.ofString());
 
         if (bachelorResponse.body().isEmpty() || bachelorResponse.body().isBlank()) {
             throw new NullPointerException("Student does not passed any modules");
         } else {
-                 return false;
-            
+            return false;
 
-        }}
-
-
-    
-    
+        }
+    } */
 
     public String deleteStudent(int matrNr) {
         studentRepository.delete(studentRepository.findByMatrNr(matrNr));
@@ -145,7 +141,7 @@ public class StudentService {
                     .append(studentRepository.findByMatrNr(matrNr).getStudentCourseId() + "/" + modulId);
             HttpRequest courseRequest = HttpRequest.newBuilder().uri(new URI(courseBuilder.toString()))
                     .GET().build();
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(courseRequest, BodyHandlers.ofString());
             if (response.body().isEmpty() || response.body().isBlank()) {
                 throw new NullPointerException("Module not available");
             } else {
@@ -160,15 +156,12 @@ public class StudentService {
         }
     }
 
-
-    public String signOutForModule(int matriklNr, Integer moduleId) {
-      String signOut = studentRepository.findByMatriklNr(matriklNr).removeAktiveModule(moduleId);
-      studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
-      studentRepository.flush();
-      return signOut;
-                
-        }
-    
+    public String signOutOfModule(int matriklNr, Integer moduleId) {
+        String signOut = studentRepository.findByMatrNr(matriklNr).removeAktiveModule(moduleId);
+        studentRepository.save(studentRepository.findByMatrNr(matriklNr));
+        studentRepository.flush();
+        return signOut;
+    }
 
     // Student passed a Module.
     public String passedModule(int matrNr, Integer modulId) {
@@ -216,7 +209,7 @@ public class StudentService {
         }
     }
 
-    public List<Integer> tempModuleList; 
+    public List<Integer> tempModuleList;
 
     // Get the Module list for the specific course
     public String getModuleList(int matriklNr, int courseId) {
@@ -231,8 +224,8 @@ public class StudentService {
             if (response.body().isEmpty() || response.body().isBlank()) {
                 throw new NullPointerException("Course not available");
             } else {
-                studentRepository.findByMatriklNr(matriklNr).setStudentCourseId(courseId);
-                studentRepository.save(studentRepository.findByMatriklNr(matriklNr));
+                studentRepository.findByMatrNr(matriklNr).setStudentCourseId(courseId);
+                studentRepository.save(studentRepository.findByMatrNr(matriklNr));
                 studentRepository.flush();
                 return "Student enrolled successfully in course: " + courseId;
             }
@@ -242,62 +235,9 @@ public class StudentService {
         }
     }
 
-    public Student getStudent(int matriklNr) {
-        return studentRepository.findByMatriklNr(matriklNr);
-    }
+    public List<Integer> getPassedListByMatrNr(int matrNr) {
+        return studentRepository.findByMatrNr(matrNr).getPassedModules();
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
-    }
-
-    public String updateStudent(Student student) {
-
-        try {
-
-            // studentRepository.updateStudentbyMatriklNr(student.getMatriklNr(),
-            // student.getName());
-
-            Student s = studentRepository.findByMatriklNr(student.getMatriklNr());
-
-            if (student.getName() != null) {
-
-                s.setName(student.getName());
-
-            }
-
-            if (student.getFirstName() != null) {
-
-                s.setFirstName(student.getFirstName());
-
-            }
-
-            if (student.getDob() != null) {
-
-                s.setDob(student.getDob());
-            }
-
-            if (student.getStudentCourseId() != null) {
-
-                s.setStudentCourseId(student.getStudentCourseId());
-            }
-
-            studentRepository.save(s);
-            studentRepository.flush();
-
-            return "Student updated successfully: " + s.toString();
-
-        } catch (Exception e) {
-            return "An error occurred while updating student with matriklNr: " + student.getMatriklNr() + " "
-                    + e.getMessage();
-        }
-
-    }
-
-    public String deleteStudent(int matriklNr) {
-
-        studentRepository.delete(studentRepository.findByMatriklNr(matriklNr));
-
-        return "Student with matriklNr: " + matriklNr + " deleted successfully!";
     }
 
 }

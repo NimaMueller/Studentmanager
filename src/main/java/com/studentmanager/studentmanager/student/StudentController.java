@@ -64,9 +64,9 @@ public class StudentController {
   }
 
   @DeleteMapping("signOut")
-  public String signOut(@RequestParam int matriklNr, Integer moduleId) {
+  public String signOut(@RequestParam int matrNr, Integer moduleId) {
 
-    return studentService.signOutForModule(matriklNr, moduleId);
+    return studentService.signOutOfModule(matrNr, moduleId);
   }
 
   // Let the Student pass a Module.
@@ -81,17 +81,17 @@ public class StudentController {
     return studentService.failedModule(matrNr, moduleId);
   }
 
-  @GetMapping("getPassedList/{matriklNr}")
-  public List<Integer> getPassedList(@PathVariable Integer matriklNr) {
-    return studentService.getPassedModulesByMatriklNr(matriklNr);
+  @GetMapping("getPassedList/{matrNr}")
+  public List<Integer> getPassedList(@PathVariable Integer matrNr) {
+    return studentService.getPassedListByMatrNr(matrNr);
      
   }
 
-  @GetMapping("eligibileBachelor/{matriklNr}")
-  public boolean eligilbleBachelor(@PathVariable Integer matriklNr) throws IOException, InterruptedException {
-    return studentService.IsEligibleForBachelor(matriklNr);
+/*   @GetMapping("eligibileBachelor/{matrNr}")
+  public boolean eligilbleBachelor(@PathVariable Integer matrNr) throws IOException, InterruptedException {
+    return studentService.IsEligibleForBachelor(matrNr);
      
-  }
+  } */
   
 
 }

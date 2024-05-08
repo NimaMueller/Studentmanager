@@ -127,6 +127,8 @@ public class Student {
 
   }
 
+  
+
   /*
    * private int generateUniquematrNr() {
    * Random random = new Random();
@@ -154,21 +156,5 @@ public class Student {
    * }
    */
 
-  <<<<<<<HEAD
-  /*
-   * @ManyToOne
-   * 
-   * @JoinColumn(name = "course_id")
-   * private Course course
-   */
-
-  /*
-   * @ManyToOne
-   * 
-   * @JoinColumn(name = "student_course_id", insertable = false, updatable =
-   * false)
-   * private Course course;
-   */
-
-  =======>>>>>>>66339075387f 2 bc46b51bb985c0c5427ea5d1761
+  
 }
