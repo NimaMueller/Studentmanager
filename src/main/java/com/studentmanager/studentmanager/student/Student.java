@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 public class Student {
@@ -25,8 +27,8 @@ public class Student {
   /* private static Set<Integer> generatedMatriklNumbers = new HashSet<>(); */
 
   @Id
-  @Column(name = "matrikl_nr")
-  private int matriklNr;
+  @Column(name = "matr_nr")
+  private int matrNr;
 
   @Nullable
   @Column(name = "student_course_id")
@@ -42,8 +44,8 @@ public class Student {
   private LocalDate dob;
 
   @Nullable
-  @Column(name = "aktive_modules")
-  private List<Integer> aktiveModules;
+  @Column(name = "active_modules")
+  private List<Integer> activeModules;
 
   @Nullable
   @Column(name = "passed_modules")
@@ -53,17 +55,17 @@ public class Student {
   @Column(name = "failed_modules")
   private List<Integer> failedModules;
 
-  public Student(int matriklNr, String name, String firstName, LocalDate dob) {
-    this.matriklNr = matriklNr;
+  public Student(int matrNr, String name, String firstName, LocalDate dob) {
+    this.matrNr = matrNr;
     this.name = name;
     this.firstName = firstName;
     this.dob = dob;
   }
 
-  public String addAktiveModule(Integer moduleId) {
+  public String addActiveModule(Integer moduleId) {
     if (!passedModules.contains(moduleId)) {
-      if (!aktiveModules.contains(moduleId)) {
-        aktiveModules.add(moduleId);
+      if (!activeModules.contains(moduleId)) {
+        activeModules.add(moduleId);
         return "Student signed up successfully in module with Id: " + moduleId;
       } else {
         return "Student already signed up for module with Id: " + moduleId;
@@ -75,19 +77,18 @@ public class Student {
   }
 
   public String removeAktiveModule(Integer moduleId) {
-    if (aktiveModules.contains(moduleId)) {
-    aktiveModules.remove(moduleId);
-    return "Student signed out successfully in module with Id " + moduleId;
-  } else {
-    return"Student did not signed up in module with id " + moduleId;
+    if (activeModules.contains(moduleId)) {
+      activeModules.remove(moduleId);
+      return "Student signed out successfully in module with Id " + moduleId;
+    } else {
+      return "Student did not signed up in module with id " + moduleId;
+    }
   }
-  }
-  
 
   public String passedModule(Integer moduleId) {
-    if (aktiveModules.contains(moduleId) && !passedModules.contains(moduleId)) {
+    if (activeModules.contains(moduleId) && !passedModules.contains(moduleId)) {
 
-      aktiveModules.remove(moduleId);
+      activeModules.remove(moduleId);
       passedModules.add(moduleId);
       return "Student passed module with Id: " + moduleId;
 
@@ -103,19 +104,19 @@ public class Student {
 
   public String failedModule(Integer moduleId) {
     int trys = 1;
-    if (aktiveModules.contains(moduleId)) {
+    if (activeModules.contains(moduleId)) {
       for (int i : failedModules) {
         if (i == moduleId) {
           trys++;
 
           if (trys >= 3) {
-            aktiveModules.remove(moduleId);
+            activeModules.remove(moduleId);
             failedModules.add(moduleId);
             return "Student failed module with Id: " + moduleId + " for the third time and will now be exmatriculated";
           }
         }
       }
-      aktiveModules.remove(moduleId);
+      activeModules.remove(moduleId);
       failedModules.add(moduleId);
       return "Student failed Module with Id: " + moduleId + " for the " + trys + ". time";
     } else if (passedModules.contains(moduleId)) {
@@ -126,37 +127,34 @@ public class Student {
 
   }
 
-  
-
-  
-
   /*
-   * private int generateUniqueMatriklNr() {
+   * private int generateUniquematrNr() {
    * Random random = new Random();
-   * int randomMatriklNr;
+   * int randommatrNr;
    * 
-   * while (matriklNrIsUnique == false) {
-   * randomMatriklNr = random.nextInt(1000000) + 1000000;
+   * while (matrNrIsUnique == false) {
+   * randommatrNr = random.nextInt(1000000) + 1000000;
    * 
-   * if (generatedMatriklNumbers.contains(randomMatriklNr)) {
-   * matriklNrIsUnique = false;
+   * if (generatedMatriklNumbers.contains(randommatrNr)) {
+   * matrNrIsUnique = false;
    * } else {
-   * generatedMatriklNumbers.add(randomMatriklNr);
-   * matriklNrIsUnique = true;
+   * generatedMatriklNumbers.add(randommatrNr);
+   * matrNrIsUnique = true;
    * }
    * 
    * }
    * 
    * do {
-   * randomMatriklNr = random.nextInt(1000000) + 1000000;
-   * } while (generatedMatriklNumbers.contains(randomMatriklNr));
+   * randommatrNr = random.nextInt(1000000) + 1000000;
+   * } while (generatedMatriklNumbers.contains(randommatrNr));
    * 
-   * generatedMatriklNumbers.add(randomMatriklNr);
+   * generatedMatriklNumbers.add(randommatrNr);
    * 
-   * return randomMatriklNr;
+   * return randommatrNr;
    * }
    */
 
+  <<<<<<<HEAD
   /*
    * @ManyToOne
    * 
@@ -172,4 +170,5 @@ public class Student {
    * private Course course;
    */
 
+  =======>>>>>>>66339075387f 2 bc46b51bb985c0c5427ea5d1761
 }
