@@ -63,13 +63,13 @@ public class StudentController {
   }
 
   // Let the Student pass a Module.
-  @PostMapping("passed")
+  @PostMapping("pass")
   public String passed(@RequestParam int matrNr, Integer moduleId) {
     return studentService.passedModule(matrNr, moduleId);
   }
 
   // Let the Student fail a Module.
-  @PostMapping("failed")
+  @PostMapping("fail")
   public String failed(@RequestParam int matrNr, Integer moduleId) {
     return studentService.failedModule(matrNr, moduleId);
   }

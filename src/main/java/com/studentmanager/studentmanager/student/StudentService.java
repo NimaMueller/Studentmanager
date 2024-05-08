@@ -24,10 +24,7 @@ public class StudentService {
             studentRepository.save(student);
             studentRepository.flush();
             return "Student created successfully: " + student.toString();
-
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             return "An error occurred while creating a new student with matrNr: " + student.getMatrNr() + " "
                     + e.getMessage();
         }
@@ -48,11 +45,17 @@ public class StudentService {
 
             if (student.getName() != null) {
                 s.setName(student.getName());
-            } else if (student.getFirstName() != null) {
+            }
+
+            if (student.getFirstName() != null) {
                 s.setFirstName(student.getFirstName());
-            } else if (student.getDob() != null) {
+            }
+
+            if (student.getDob() != null) {
                 s.setDob(student.getDob());
-            } else if (student.getStudentCourseId() != null) {
+            }
+
+            if (student.getStudentCourseId() != null) {
                 s.setStudentCourseId(student.getStudentCourseId());
             }
 
@@ -78,12 +81,12 @@ public class StudentService {
         try {
             // Coursemanager API call
             StringBuilder builder = new StringBuilder();
-            String uri = "http://localhost:8081/api/v1/course/get/";
+            String uri = "http://localhost:8081/api/v1/course/checkForCourse/";
             builder.append(uri).append(courseId);
             HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
                     .GET().build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-            if (response.body().isEmpty() || response.body().isBlank()) {
+            if (response.body().equals("false")) {
                 throw new NullPointerException("Course not available");
             } else {
                 studentRepository.findByMatrNr(matrNr).setStudentCourseId(courseId);
@@ -92,7 +95,7 @@ public class StudentService {
                 return "Student enrolled successfully in course: " + courseId;
             }
         } catch (Exception e) {
-            return "An error occurred while enrolling in course with id: " + matrNr + " "
+            return "An error occurred while enrolling in course with id: " + courseId + " "
                     + e.getMessage();
         }
     }
@@ -118,7 +121,7 @@ public class StudentService {
             HttpResponse<String> courseResponse = client.send(courseRequest, BodyHandlers.ofString());
 
             // Check if Module exists.
-            if (moduleResponse.body().isEmpty() || moduleResponse.body().isBlank()) {
+            if (moduleResponse.body().equals("false")) {
                 throw new NullPointerException("Module not available!");
             }
             // Check if Module is available for this Course.
@@ -130,10 +133,9 @@ public class StudentService {
                 studentRepository.flush();
                 return statusMessage;
             }
-
         } catch (Exception e) {
-            return "An error occurred while trying to sign up for Module with ID: " + " "
-                    + e.getMessage();
+            return "An error occurred while trying to sign up for Module with ID: " + modulId + " " +
+                    e.getMessage();
         }
     }
 
@@ -154,7 +156,6 @@ public class StudentService {
                 studentRepository.flush();
                 return statusMessage;
             }
-
         } catch (Exception e) {
             return "An error occurred while trying to sign up for Module with ID: " + " "
                     + e.getMessage();
@@ -178,7 +179,6 @@ public class StudentService {
                 studentRepository.flush();
                 return statusMessage;
             }
-
         } catch (Exception e) {
             return "An error occurred while trying to sign up for Module with ID: " + " "
                     + e.getMessage();
