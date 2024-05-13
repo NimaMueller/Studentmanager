@@ -1,17 +1,14 @@
 package com.studentmanager.studentmanager.student;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.gson.Gson;
 
 @Service
 public class StudentService {
@@ -73,26 +70,6 @@ public class StudentService {
         }
     }
 
-/*     public boolean IsEligibleForBachelor(int matriklNr) throws IOException, InterruptedException {
-
-        String uri = "http://localhost:8080/api/v1/module/calculateCp";
-
-        Gson gson = new Gson();
-        String jsonBody = gson.toJson(Arrays.asList(1, 2, 3));
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri)).header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
-
-        HttpResponse<String> bachelorResponse = client.send(request, BodyHandlers.ofString());
-
-        if (bachelorResponse.body().isEmpty() || bachelorResponse.body().isBlank()) {
-            throw new NullPointerException("Student does not passed any modules");
-        } else {
-            return false;
-
-        }
-    } */
-
     public String deleteStudent(int matrNr) {
         studentRepository.delete(studentRepository.findByMatrNr(matrNr));
 
@@ -133,17 +110,23 @@ public class StudentService {
             HttpRequest moduleRequest = HttpRequest.newBuilder().uri(new URI(moduleBuilder.toString()))
                     .GET().build();
             HttpResponse<String> moduleResponse = client.send(moduleRequest, BodyHandlers.ofString());
-            StringBuilder courseBuilder = new StringBuilder();
 
             // Coursemanager API call (Check if Module available for the Students Course).
+            StringBuilder courseBuilder = new StringBuilder();
             String courseUri = "http://localhost:8081/api/v1/course/checkForModule/";
             courseBuilder.append(courseUri)
                     .append(studentRepository.findByMatrNr(matrNr).getStudentCourseId() + "/" + modulId);
             HttpRequest courseRequest = HttpRequest.newBuilder().uri(new URI(courseBuilder.toString()))
                     .GET().build();
-            HttpResponse<String> response = client.send(courseRequest, BodyHandlers.ofString());
-            if (response.body().isEmpty() || response.body().isBlank()) {
-                throw new NullPointerException("Module not available");
+            HttpResponse<String> courseResponse = client.send(courseRequest, BodyHandlers.ofString());
+
+            // Check if Module exists.
+            if (moduleResponse.body().equals("false")) {
+                throw new NullPointerException("Module not available!");
+            }
+            // Check if Module is available for this Course.
+            else if (courseResponse.body().equals("false")) {
+                throw new NullPointerException("Module is not available for this Course!");
             } else {
                 String statusMessage = studentRepository.findByMatrNr(matrNr).addActiveModule(modulId);
                 studentRepository.save(studentRepository.findByMatrNr(matrNr));
@@ -154,13 +137,6 @@ public class StudentService {
             return "An error occurred while trying to sign up for Module with ID: " + modulId + " " +
                     e.getMessage();
         }
-    }
-
-    public String signOutOfModule(int matriklNr, Integer moduleId) {
-        String signOut = studentRepository.findByMatrNr(matriklNr).removeAktiveModule(moduleId);
-        studentRepository.save(studentRepository.findByMatrNr(matriklNr));
-        studentRepository.flush();
-        return signOut;
     }
 
     // Student passed a Module.
@@ -207,37 +183,6 @@ public class StudentService {
             return "An error occurred while trying to sign up for Module with ID: " + " "
                     + e.getMessage();
         }
-    }
-
-    public List<Integer> tempModuleList;
-
-    // Get the Module list for the specific course
-    public String getModuleList(int matriklNr, int courseId) {
-        try {
-            tempModuleList = new ArrayList<>();
-            StringBuilder builder = new StringBuilder();
-            String uri = "http://localhost:8081/api/v1/course/getModuleList/";
-            builder.append(uri).append(courseId);
-            HttpRequest request = HttpRequest.newBuilder().uri(new URI(builder.toString()))
-                    .GET().build();
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-            if (response.body().isEmpty() || response.body().isBlank()) {
-                throw new NullPointerException("Course not available");
-            } else {
-                studentRepository.findByMatrNr(matriklNr).setStudentCourseId(courseId);
-                studentRepository.save(studentRepository.findByMatrNr(matriklNr));
-                studentRepository.flush();
-                return "Student enrolled successfully in course: " + courseId;
-            }
-        } catch (Exception e) {
-            return "An error occurred while enrolling in course with id: " + matriklNr + " "
-                    + e.getMessage();
-        }
-    }
-
-    public List<Integer> getPassedListByMatrNr(int matrNr) {
-        return studentRepository.findByMatrNr(matrNr).getPassedModules();
-
     }
 
 }
