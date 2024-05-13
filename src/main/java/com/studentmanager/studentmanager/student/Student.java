@@ -76,7 +76,7 @@ public class Student {
 
   }
 
-  public String removeAktiveModule(Integer moduleId) {
+  public String removeActiveModule(Integer moduleId) {
     if (activeModules.contains(moduleId)) {
       activeModules.remove(moduleId);
       return "Student signed out successfully in module with Id " + moduleId;

@@ -1,14 +1,18 @@
 package com.studentmanager.studentmanager.student;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
 
 @Service
 public class StudentService {
@@ -183,6 +187,61 @@ public class StudentService {
             return "An error occurred while trying to sign up for Module with ID: " + " "
                     + e.getMessage();
         }
+    }
+
+        public String IsEligibleForBachelor(int matrNr) throws IOException, InterruptedException {
+
+
+        Student studentLookingForBachelor = getStudent(matrNr);
+        
+        if(studentLookingForBachelor != null) {
+
+            // Get passed modules from student
+            List<Integer> passedModules = studentLookingForBachelor.getPassedModules();
+            
+            // Build request for ModuleManager
+            String uri = "http://localhost:8080/api/v1/module/calculateCp";
+            Gson gson = new Gson();
+            String jsonBody = gson.toJson(passedModules);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(uri)).header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody)).build();
+
+            // Retrieve response from ModuleManager
+            HttpResponse<String> bachelorResponse = client.send(request, BodyHandlers.ofString());
+
+
+            // Logic with received ModuleList
+            if (bachelorResponse.body().isEmpty() || bachelorResponse.body().isBlank()) {
+                throw new NullPointerException("Student does not passed any modules");
+            } else {
+                String body = bachelorResponse.body();
+
+            // Convert String into Integer
+                int cp;
+                try {
+                    cp = Integer.parseInt(body);
+                }
+                catch (NumberFormatException e) {
+                    return "Parsing to Integer failed because: " + e.getMessage();
+                }
+                if(cp >= 150) {
+                    return "Student with MatrNr: " + matrNr + " is ready for bachelor and has: " + cp + " credit points";
+                } else {
+                    return "Student with MatrNr: " + matrNr + " is not ready for bachelor and has: " + cp + " credit points";
+                }
+            }
+        } else {
+            return "Student does not exist! Calculation not possible";
+        }
+    }  
+
+
+  public String signOutOfModule(int matrNr, Integer moduleId) {
+        String signOut = studentRepository.findByMatrNr(matrNr).removeActiveModule(moduleId);
+        studentRepository.save(studentRepository.findByMatrNr(matrNr));
+        studentRepository.flush();
+        return signOut;
     }
 
 }
