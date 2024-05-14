@@ -6,7 +6,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +75,6 @@ public class StudentService {
 
     public String deleteStudent(int matrNr) {
         studentRepository.delete(studentRepository.findByMatrNr(matrNr));
-
         return "Student with matrNr: " + matrNr + " deleted successfully!";
     }
 
@@ -189,16 +187,13 @@ public class StudentService {
         }
     }
 
-        public String IsEligibleForBachelor(int matrNr) throws IOException, InterruptedException {
-
-
+    public String IsEligibleForBachelor(int matrNr) throws IOException, InterruptedException {
         Student studentLookingForBachelor = getStudent(matrNr);
-        
-        if(studentLookingForBachelor != null) {
+        if (studentLookingForBachelor != null) {
 
             // Get passed modules from student
             List<Integer> passedModules = studentLookingForBachelor.getPassedModules();
-            
+
             // Build request for ModuleManager
             String uri = "http://localhost:8080/api/v1/module/calculateCp";
             Gson gson = new Gson();
@@ -210,34 +205,33 @@ public class StudentService {
             // Retrieve response from ModuleManager
             HttpResponse<String> bachelorResponse = client.send(request, BodyHandlers.ofString());
 
-
             // Logic with received ModuleList
             if (bachelorResponse.body().isEmpty() || bachelorResponse.body().isBlank()) {
                 throw new NullPointerException("Student does not passed any modules");
             } else {
                 String body = bachelorResponse.body();
 
-            // Convert String into Integer
+                // Convert String into Integer
                 int cp;
                 try {
                     cp = Integer.parseInt(body);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     return "Parsing to Integer failed because: " + e.getMessage();
                 }
-                if(cp >= 150) {
-                    return "Student with MatrNr: " + matrNr + " is ready for bachelor and has: " + cp + " credit points";
+                if (cp >= 150) {
+                    return "Student with MatrNr: " + matrNr + " is ready for bachelor and has: " + cp
+                            + " credit points";
                 } else {
-                    return "Student with MatrNr: " + matrNr + " is not ready for bachelor and has: " + cp + " credit points";
+                    return "Student with MatrNr: " + matrNr + " is not ready for bachelor and has: " + cp
+                            + " credit points";
                 }
             }
         } else {
             return "Student does not exist! Calculation not possible";
         }
-    }  
+    }
 
-
-  public String signOutOfModule(int matrNr, Integer moduleId) {
+    public String signOutOfModule(int matrNr, Integer moduleId) {
         String signOut = studentRepository.findByMatrNr(matrNr).removeActiveModule(moduleId);
         studentRepository.save(studentRepository.findByMatrNr(matrNr));
         studentRepository.flush();
