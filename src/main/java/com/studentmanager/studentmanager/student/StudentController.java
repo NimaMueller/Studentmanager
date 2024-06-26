@@ -1,6 +1,7 @@
 package com.studentmanager.studentmanager.student;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class StudentController {
 
   // Create a new Stundent and save him to the DB.
   @PostMapping("post")
-  public String createStudent(@RequestBody Student student) {
-    return studentService.createStudent(student);
+  public String createStudent(@RequestBody CreateStudentRequest request) {
+    return studentService.createStudent(request);
   }
 
   // Get a Stundent in the DB by his Matrikle number.
@@ -53,39 +54,38 @@ public class StudentController {
 
   // Enroll a Student in a Course.
   @PostMapping("enroll")
-  public String enrollInCourse(@RequestParam int matrNr, Integer courseId) {
+  public String enrollInCourse(@RequestParam int matrNr, Integer courseId)
+      throws IOException, InterruptedException, URISyntaxException {
     return studentService.enroll(matrNr, courseId);
   }
 
   // Let the Student sign up for a Module of his Course.
   @PostMapping("signUp")
-  public String signUp(@RequestParam int matrNr, Integer moduleId) {
+  public String signUp(@RequestParam int matrNr, String moduleId)
+      throws URISyntaxException, IOException, InterruptedException {
     return studentService.signUpForModule(matrNr, moduleId);
   }
 
   @DeleteMapping("signOut")
-  public String signOut(@RequestParam int matrNr, Integer moduleId) {
-
+  public String signOut(@RequestParam int matrNr, String moduleId) {
     return studentService.signOutOfModule(matrNr, moduleId);
   }
 
   // Let the Student pass a Module.
-  @PostMapping("pass")
-  public String passed(@RequestParam int matrNr, Integer moduleId) {
-    return studentService.passedModule(matrNr, moduleId);
+  @PostMapping("result")
+  public String result(@RequestParam int matrNr, String moduleId, double grade) {
+    return studentService.moduleResult(matrNr, moduleId, grade);
   }
 
-  // Let the Student fail a Module.
+/*   // Let the Student fail a Module.
   @PostMapping("fail")
   public String failed(@RequestParam int matrNr, Integer moduleId) {
     return studentService.failedModule(matrNr, moduleId);
+  } */
+
+  @GetMapping("isEligibile/{matrNr}")
+  public String eligibile(@PathVariable int matrNr) throws IOException, InterruptedException {
+    return studentService.IsEligibleForBachelor(matrNr);
   }
-
-@GetMapping("isEligibile/{matrNr}")
-public String eligibile(@PathVariable int matrNr) throws IOException, InterruptedException {
-  return studentService.IsEligibleForBachelor(matrNr);
-}
-
-
 
 }

@@ -1,30 +1,28 @@
 package com.studentmanager.studentmanager.student;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.lang.Nullable;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Table(name = "students")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @Entity
 public class Student {
-
-  /* private static Set<Integer> generatedMatriklNumbers = new HashSet<>(); */
 
   @Id
   @Column(name = "matr_nr")
@@ -45,25 +43,30 @@ public class Student {
 
   @Nullable
   @Column(name = "active_modules")
-  private List<Integer> activeModules;
+  private List<String> activeModules;
 
   @Nullable
   @Column(name = "passed_modules")
-  private List<Integer> passedModules;
+  @Convert(converter = HashMapConverter.class)
+  private HashMap<String, Double> passedModules;
 
   @Nullable
   @Column(name = "failed_modules")
-  private List<Integer> failedModules;
+  @Convert(converter = HashMapConverter.class)
+  private HashMap<String, ArrayList<Double>> failedModules;
 
-  public Student(int matrNr, String name, String firstName, LocalDate dob) {
-    this.matrNr = matrNr;
-    this.name = name;
-    this.firstName = firstName;
-    this.dob = dob;
+  public Student() {
+    Random dice = new Random();
+    int lowerBound = 1000001;
+    int upperBound = 1999999;
+    this.matrNr = lowerBound + dice.nextInt(upperBound - lowerBound);
+    this.activeModules = new ArrayList<String>();
+    this.failedModules = new HashMap<String, ArrayList<Double>>();
+    this.passedModules = new HashMap<String, Double>();
   }
 
-  public String addActiveModule(Integer moduleId) {
-    if (!passedModules.contains(moduleId)) {
+  public String addActiveModule(String moduleId) {
+    if (!passedModules.containsKey(moduleId)) {
       if (!activeModules.contains(moduleId)) {
         activeModules.add(moduleId);
         return "Student signed up successfully in module with Id: " + moduleId;
@@ -76,25 +79,27 @@ public class Student {
 
   }
 
-  public String removeActiveModule(Integer moduleId) {
+  public String removeActiveModule(String moduleId) {
     if (activeModules.contains(moduleId)) {
       activeModules.remove(moduleId);
-      return "Student signed out successfully in module with Id " + moduleId;
+      return "Student successfully signed out of module with Id " + moduleId;
     } else {
-      return "Student did not signed up in module with id " + moduleId;
+      return "Student did not sign up in module with id " + moduleId;
     }
   }
 
-  public String passedModule(Integer moduleId) {
-    if (activeModules.contains(moduleId) && !passedModules.contains(moduleId)) {
+  public String passedModule(String moduleId, double grade) {
+    if (activeModules.contains(moduleId) && !passedModules.containsKey(moduleId) && grade <= 4) {
 
       activeModules.remove(moduleId);
-      passedModules.add(moduleId);
+      passedModules.put(moduleId, grade);
       return "Student passed module with Id: " + moduleId;
 
-    } else if (passedModules.contains(moduleId)) {
+    } else if (passedModules.containsKey(moduleId)) {
       return "Student already passed module with Id: " + moduleId;
 
+    } else if (grade > 4) {
+      return "Student needs a Grader better than 4.1 in order to pass";
     } else {
       return "Student cannot pass module with Id: " + moduleId + " because he didn't signed up for it.";
 
@@ -102,59 +107,60 @@ public class Student {
 
   }
 
-  public String failedModule(Integer moduleId) {
-    int trys = 1;
+ /*  public String failedModule(String moduleId, double grade) {
+    int trys = 0;
+    if (!failedModules.containsKey(moduleId)) {
+      failedModules.put(moduleId, new ArrayList<>());
+    }
     if (activeModules.contains(moduleId)) {
-      for (int i : failedModules) {
-        if (i == moduleId) {
-          trys++;
 
+      for (String i : failedModules.keySet()) {
+        if (i.equals(moduleId)) {
+          trys++;
           if (trys >= 3) {
             activeModules.remove(moduleId);
-            failedModules.add(moduleId);
+            failedModules.get(moduleId).add(grade);
+            studentCourseId = null;
             return "Student failed module with Id: " + moduleId + " for the third time and will now be exmatriculated";
           }
         }
       }
+
       activeModules.remove(moduleId);
-      failedModules.add(moduleId);
+      failedModules.get(moduleId).add(grade);
       return "Student failed Module with Id: " + moduleId + " for the " + trys + ". time";
-    } else if (passedModules.contains(moduleId)) {
+    } else if (passedModules.containsKey(moduleId)) {
       return "Student cannot fail module with Id: " + moduleId + " because he already passed it.";
     } else {
       return "Student cannot fail module with Id: " + moduleId + " because he didn't signed up for it.";
     }
+  } */
 
-  }
 
-  
-
-  /*
-   * private int generateUniquematrNr() {
-   * Random random = new Random();
-   * int randommatrNr;
-   * 
-   * while (matrNrIsUnique == false) {
-   * randommatrNr = random.nextInt(1000000) + 1000000;
-   * 
-   * if (generatedMatriklNumbers.contains(randommatrNr)) {
-   * matrNrIsUnique = false;
-   * } else {
-   * generatedMatriklNumbers.add(randommatrNr);
-   * matrNrIsUnique = true;
-   * }
-   * 
-   * }
-   * 
-   * do {
-   * randommatrNr = random.nextInt(1000000) + 1000000;
-   * } while (generatedMatriklNumbers.contains(randommatrNr));
-   * 
-   * generatedMatriklNumbers.add(randommatrNr);
-   * 
-   * return randommatrNr;
-   * }
-   */
+  public String failedModule(String moduleId, double grade) {
+    if (!failedModules.containsKey(moduleId)) {
+        failedModules.put(moduleId, new ArrayList<>());
+    }
+    
+    if (activeModules.contains(moduleId)) {
+        int trys = failedModules.get(moduleId).size();
+        
+        if (trys >= 2) { // Da 0-basierte Zählung, 2 entspricht dem 3. Fehlversuch
+            activeModules.remove(moduleId);
+            failedModules.get(moduleId).add(grade);
+            studentCourseId = null;
+            return "Student failed module with Id: " + moduleId + " for the third time and will now be exmatriculated";
+        } else {
+            failedModules.get(moduleId).add(grade);
+            return "Student failed Module with Id: " + moduleId + " for the " + (trys + 1) + ". time";
+        }
+    } else if (passedModules.containsKey(moduleId)) {
+        return "Student cannot fail module with Id: " + moduleId + " because he already passed it.";
+    } else {
+        return "Student cannot fail module with Id: " + moduleId + " because he didn't signed up for it.";
+    }
+}
 
   
+
 }
